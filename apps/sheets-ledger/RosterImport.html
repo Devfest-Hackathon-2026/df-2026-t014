@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8">
+<style>
+body{margin:0;padding:18px;font:13px system-ui,sans-serif;color:#1c352e;background:#f9fbf8}h1{font-size:18px;margin:0 0 8px}p{line-height:1.6;margin:6px 0}.muted{color:#63766c;font-size:12px}.error{color:#9c3030;white-space:pre-wrap}.ok{color:#176a54}button{padding:9px 14px;margin-top:12px;background:#176a54;color:white;border:0;border-radius:6px;font:inherit;cursor:pointer}button:disabled{opacity:.5;cursor:default}button.secondary{background:#5d6b63}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#edf4ed;border-radius:6px;padding:10px;font:12px/1.55 ui-monospace,monospace;margin-top:12px}#summary{white-space:pre-wrap;line-height:1.6;margin-top:12px}.card{border:1px solid #cbd8ce;border-radius:8px;padding:10px 12px;margin-top:12px;background:white}.warn{border-color:#d9a441;background:#fdf7e8}.warn strong{color:#8a5a00}
+</style></head><body>
+<h1>名簿をCSVから取り込む</h1>
+<p>名簿CSVを選んでください。必須列は <span class="muted">出席番号・氏名</span>、任意列は <span class="muted">生徒ID・行・列</span>（座席は1始まり）です。UTF-8（BOM可）。</p>
+<label>CSVファイル <input id="file" type="file" accept=".csv,text/csv"></label>
+<button id="preview" disabled>内容を確認する</button>
+<p id="status" role="status" class="muted">ファイルを選んでください。</p>
+<div id="summary" hidden></div>
+<div id="confirm" class="card warn" hidden>
+  <p><strong>名簿タブのデータ行を、このCSVの内容で置き換えます。</strong></p>
+  <p id="confirmText" class="muted"></p>
+  <p class="muted">見出し行は保持します。既存の名簿のデータ行は消えます。</p>
+  <button id="run">置き換えて取り込む</button>
+</div>
+<pre id="result" hidden></pre>
+<script>
+var fileInput = document.getElementById('file');
+var preview = document.getElementById('preview');
+var run = document.getElementById('run');
+var status = document.getElementById('status');
+var summary = document.getElementById('summary');
+var confirmBox = document.getElementById('confirm');
+var confirmText = document.getElementById('confirmText');
+var result = document.getElementById('result');
+var csvText = '';
+var fileName = '';
+
+function reset() {
+  confirmBox.hidden = true;
+  result.hidden = true;
+  summary.hidden = true;
+  summary.textContent = '';
+  csvText = '';
+}
+
+function setStatus(text, kind) {
+  status.className = kind || 'muted';
+  status.textContent = text;
+}
+
+function showSummary(value) {
+  summary.hidden = false;
+  summary.textContent = value.message || '';
+  if (!value.ok) {
+    summary.className = 'error';
+    confirmBox.hidden = true;
+    setStatus('取り込めません。CSVを直してください。', 'error');
+    return;
+  }
+  summary.className = 'ok';
+  confirmBox.hidden = false;
+  confirmText.textContent = '名簿タブのデータ行を ' + value.count + ' 人分で置き換えます（座席あり ' + value.seatedCount + '人 / 座席なし ' + value.unseatedCount + '人）。';
+  setStatus('内容を確認して「置き換えて取り込む」を押してください。', 'muted');
+}
+
+fileInput.addEventListener('change', function() {
+  reset();
+  preview.disabled = !fileInput.files || !fileInput.files.length;
+  setStatus(preview.disabled ? 'ファイルを選んでください。' : '「内容を確認する」を押してください。', 'muted');
+});
+
+preview.addEventListener('click', function() {
+  var file = fileInput.files && fileInput.files[0];
+  if (!file) return;
+  preview.disabled = true;
+  setStatus('CSVを読み込んでいます…', 'muted');
+  var reader = new FileReader();
+  reader.onerror = function() {
+    preview.disabled = false;
+    setStatus('CSVを読み込めませんでした。', 'error');
+  };
+  reader.onload = function() {
+    csvText = String(reader.result || '');
+    fileName = file.name;
+    google.script.run.withSuccessHandler(function(value) {
+      preview.disabled = false;
+      showSummary(value || {});
+    }).withFailureHandler(function(error) {
+      preview.disabled = false;
+      setStatus(error && error.message ? error.message : 'CSVを確認できませんでした。', 'error');
+    }).previewTABANERosterCsv(csvText);
+  };
+  reader.readAsText(file, 'UTF-8');
+});
+
+run.addEventListener('click', function() {
+  if (!csvText) return;
+  run.disabled = true;
+  setStatus('名簿タブへ取り込んでいます…', 'muted');
+  google.script.run.withSuccessHandler(function(value) {
+    run.disabled = false;
+    setStatus('取り込みが完了しました。', 'ok');
+    confirmBox.hidden = true;
+    result.hidden = false;
+    result.textContent = value.message || '';
+  }).withFailureHandler(function(error) {
+    run.disabled = false;
+    setStatus(error && error.message ? error.message : '取り込めませんでした。', 'error');
+  }).importTABANERosterCsv({fileName: fileName, text: csvText, confirmReplace: true});
+});
+</script></body></html>

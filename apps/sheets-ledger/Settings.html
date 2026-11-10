@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8">
+<style>
+body{margin:0;padding:18px;font:13px system-ui,sans-serif;color:#1c352e;background:#f9fbf8}h1{font-size:18px;margin:0 0 8px}p{line-height:1.6;margin:6px 0}label{display:block;margin:12px 0 4px;font-weight:600}input,select{box-sizing:border-box;width:100%;padding:8px;border:1px solid #cbd8ce;border-radius:6px;font:inherit;background:white}button{padding:9px 14px;margin-top:14px;background:#176a54;color:white;border:0;border-radius:6px;font:inherit;cursor:pointer}button:disabled{opacity:.5;cursor:default}.muted{color:#63766c;font-size:12px}.error{color:#9c3030}.ok{color:#176a54}.row{display:flex;gap:10px}.row>*{flex:1}
+</style></head><body>
+<h1>TABANE 設定</h1>
+<p class="muted">名簿が別のスプレッドシートにある場合だけ参照先を指定します。保存先はスクリプトプロパティです。</p>
+<label for="rosterSpreadsheetUrl">名簿スプレッドシートのURL（空なら台帳本体）</label>
+<input id="rosterSpreadsheetUrl" placeholder="https://docs.google.com/spreadsheets/d/…/edit">
+<label for="rosterSheetName">名簿タブ名</label>
+<input id="rosterSheetName" value="名簿">
+<div class="row">
+  <div><label for="qrCorner">未予約原稿のQR位置</label><select id="qrCorner">
+    <option value="top-right">右上</option><option value="top-left">左上</option>
+    <option value="bottom-right">右下</option><option value="bottom-left">左下</option>
+  </select></div>
+  <div><label for="qrBandHeightPt">未予約原稿の帯の高さ（pt）</label><input id="qrBandHeightPt" type="number" min="48" max="180" step="1"></div>
+</div>
+<label for="outputFolderName">出力フォルダ名</label>
+<input id="outputFolderName" placeholder="TABANE 発行">
+<p class="muted">出力フォルダは初回発行時に自動作成されます。作成されたフォルダは Drive 上で移動・名前変更しても、そのまま出力先として使われ続けます。設定でフォルダ名を変えると、新しいフォルダが作られます。</p>
+<div class="row">
+  <div><label for="seatGridRows">座席表の行数（1〜20）</label><input id="seatGridRows" type="number" min="1" max="20" step="1"></div>
+  <div><label for="seatGridCols">座席表の列数（1〜20）</label><input id="seatGridCols" type="number" min="1" max="20" step="1"></div>
+</div>
+<p class="muted">座席表の大きさを変えると、保存後に座席表タブを描き直します。グリッドの外に出る生徒がいれば知らせます。</p>
+<button id="save">設定を保存</button>
+<p id="status" role="status" class="muted">設定を読み込んでいます…</p>
+<script>
+function el(id) { return document.getElementById(id); }
+var settings;
+function fill(value) {
+  settings = value || {};
+  el('rosterSpreadsheetUrl').value = settings.rosterSpreadsheetUrl || '';
+  el('rosterSheetName').value = settings.rosterSheetName || '名簿';
+  el('qrCorner').value = settings.qrCorner || 'top-right';
+  el('qrBandHeightPt').value = settings.qrBandHeightPt || 96;
+  el('outputFolderName').value = settings.outputFolderName || 'TABANE 発行';
+  el('seatGridRows').value = settings.seatGridRows || 6;
+  el('seatGridCols').value = settings.seatGridCols || 6;
+  el('status').className = 'muted';
+  el('status').textContent = '設定を確認して保存してください。';
+}
+function error(value) {
+  el('status').className = 'error';
+  el('status').textContent = value && value.message ? value.message : '設定を処理できませんでした。';
+  el('save').disabled = false;
+}
+el('save').addEventListener('click', function() {
+  if (el('save').disabled) return;
+  el('save').disabled = true;
+  el('status').className = 'muted';
+  el('status').textContent = '保存しています…';
+  google.script.run.withSuccessHandler(function(saved) {
+    fill(saved);
+    el('save').disabled = false;
+    el('status').className = 'ok';
+    el('status').textContent = '設定を保存しました。';
+    google.script.run.withSuccessHandler(function(status) {
+      if (status && status.message) {
+        el('status').className = status.outside && status.outside.length ? 'error' : 'ok';
+        el('status').textContent = '設定を保存しました。' + status.message;
+      }
+    }).withFailureHandler(function() {
+      /* 状態表示が失敗しても保存自体は成功している。 */
+    }).getTABANESeatChartStatus();
+  }).withFailureHandler(error).saveTABANELedgerSettings({
+    rosterSpreadsheetUrl: el('rosterSpreadsheetUrl').value.trim(),
+    rosterSheetName: el('rosterSheetName').value.trim(),
+    qrCorner: el('qrCorner').value,
+    qrBandHeightPt: Number(el('qrBandHeightPt').value),
+    outputFolderName: el('outputFolderName').value.trim(),
+    seatGridRows: Number(el('seatGridRows').value),
+    seatGridCols: Number(el('seatGridCols').value)
+  });
+});
+google.script.run.withSuccessHandler(fill).withFailureHandler(error).getTABANELedgerSettings();
+</script></body></html>

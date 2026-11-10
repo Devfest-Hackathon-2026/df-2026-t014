@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ja"><head><base target="_blank"><meta charset="utf-8">
+<style>
+body{margin:0;padding:18px;font:13px system-ui,sans-serif;color:#1c352e;background:#f9fbf8}h1{font-size:22px;margin:0 0 4px}h2{font-size:14px;margin:22px 0 6px;padding-top:14px;border-top:1px solid #e0e8e2}p{line-height:1.6;margin:6px 0}label{display:block;margin:12px 0 5px;font-weight:600}input,select{box-sizing:border-box;width:100%;padding:8px;border:1px solid #cbd8ce;border-radius:6px;font:inherit;background:white}button{width:100%;padding:10px;margin-top:10px;background:#176a54;color:white;border:0;border-radius:7px;font:inherit;cursor:pointer}button:disabled{opacity:.5;cursor:default}.secondary{background:white;color:#176a54;border:1px solid #b6cec0}.danger{background:white;color:#9c3030;border:1px solid #d9b7b2}.muted{color:#63766c;font-size:12px}.state{padding:10px 12px;border-radius:7px;background:#edf4ed;line-height:1.55}.state.ok{background:#e3f0e7;color:#14543f}.state.error{background:#fbeeec;color:#9c3030}.message{min-height:18px;font-size:12px}.message.error{color:#9c3030}.row{display:flex;gap:8px}.row>*{flex:1}.preview-wrap{text-align:center;padding:10px;background:#edf4ed;border-radius:8px}.preview-page{position:relative;display:inline-block;width:100%;max-width:240px;aspect-ratio:595.28/841.89;background:#fff;border:1px solid #b6cec0;box-shadow:0 2px 6px rgba(28,53,46,.10);overflow:hidden}.preview-qr{position:absolute;box-sizing:border-box;border:2px solid #1c352e;border-radius:2px;background:repeating-conic-gradient(#1c352e 0% 25%,#fff 0% 50%) 0 0/10px 10px}.corner-top-right .preview-qr{top:8px;right:8px}.corner-top-left .preview-qr{top:8px;left:8px}.corner-bottom-right .preview-qr{bottom:8px;right:8px}.corner-bottom-left .preview-qr{bottom:8px;left:8px}.sample-badge{position:absolute;left:8px;bottom:8px;padding:2px 6px;border-radius:4px;background:#176a54;color:#fff;font-size:10px;letter-spacing:.04em}.preview-caption{margin-top:8px;font-size:12px;color:#63766c}
+</style></head><body>
+<h1>TABANE</h1><p class="muted">配布はいつものDocsから</p>
+<div id="reservation-state" class="state" role="status">予約状態を読み込んでいます…</div>
+
+<h2>QRの予約</h2>
+<div class="row">
+  <div><label for="corner">配置コーナー</label><select id="corner">
+    <option value="top-right">右上</option><option value="top-left">左上</option>
+    <option value="bottom-right">右下</option><option value="bottom-left">左下</option>
+  </select></div>
+  <div><label for="band">帯の高さ（pt）</label><input id="band" type="number" min="48" max="180" step="1"></div>
+</div>
+<p class="muted">予約すると原稿の上余白を帯の高さ分だけ増やし、ヘッダーに薄いガイドと文書内の目印を置きます。QRの発行は台帳スプレッドシート側で行います。</p>
+<button id="reserve">QRの予約</button>
+<button id="release" class="danger">予約を解除</button>
+<p id="message" class="message" role="status"></p>
+
+<h2>仮の名前</h2>
+<label for="label">名前（任意・30文字まで）</label>
+<input id="label" maxlength="30" placeholder="例：文化祭ポスター">
+<p class="muted">予約に付ける表示用の名前です。空でも予約できます。予約済みのときに変更すると、目印とヘッダーのガイドにも反映します。</p>
+<button id="save-label" class="secondary">名前を反映</button>
+
+<h2>QRのプレビュー</h2>
+<div class="preview-wrap">
+  <div id="preview-page" class="preview-page corner-top-right">
+    <div id="preview-qr" class="preview-qr"></div>
+    <span class="sample-badge">サンプル</span>
+  </div>
+  <p class="preview-caption">帯の高さ <span id="preview-band">96</span>pt</p>
+</div>
+<p class="muted">予約位置に置かれるQRの位置と大きさの目安です。実際のQRは台帳側で生徒ごとに発行します。</p>
+
+<script>
+var defaults = {}, reservation = null, loaded = false;
+function el(id) { return document.getElementById(id); }
+function cornerLabel(corner) {
+  return { 'top-right': '右上', 'top-left': '左上', 'bottom-right': '右下', 'bottom-left': '左下' }[corner] || corner;
+}
+function setBusy(busy) {
+  el('reserve').disabled = busy;
+  el('release').disabled = busy || !reservation;
+  el('save-label').disabled = busy || !reservation;
+}
+function setMessage(text, isError) {
+  var box = el('message');
+  box.textContent = text || '';
+  box.className = isError ? 'message error' : 'message';
+}
+function renderReservation(errorText) {
+  var box = el('reservation-state');
+  if (errorText) {
+    box.textContent = errorText;
+    box.className = 'state error';
+    return;
+  }
+  if (reservation) {
+    box.textContent = '予約済み：' + cornerLabel(reservation.corner) + '・帯 ' + reservation.bandHeightPt + 'pt'
+      + (reservation.label ? '・名前「' + reservation.label + '」' : '');
+    box.className = 'state ok';
+  } else {
+    box.textContent = '未予約：QRを置く場所はまだ予約されていません。';
+    box.className = 'state';
+  }
+}
+function renderPreview() {
+  var page = el('preview-page'), qr = el('preview-qr');
+  if (!page || !qr) return;
+  var width = page.clientWidth || 240;
+  var band = Number(el('band').value) || 96;
+  var size = Math.max(16, Math.round(band / 595.28 * width));
+  qr.style.width = size + 'px';
+  qr.style.height = size + 'px';
+  page.className = 'preview-page corner-' + (el('corner').value || 'top-right');
+  el('preview-band').textContent = band;
+}
+function applyState(next) {
+  next = next || {};
+  defaults = next.defaults || {};
+  reservation = next.reservation || null;
+  if (!loaded) {
+    el('corner').value = defaults.qrCorner || 'top-right';
+    el('band').value = defaults.qrBandHeightPt || next.defaultQrBandHeightPt || 96;
+    el('label').value = defaults.qrLabel || '';
+    loaded = true;
+  }
+  if (reservation) {
+    el('corner').value = reservation.corner;
+    el('band').value = reservation.bandHeightPt;
+    el('label').value = reservation.label || '';
+  }
+  renderReservation(next.reservationError);
+  renderPreview();
+  setBusy(false);
+}
+function fail(error) {
+  setBusy(false);
+  setMessage(error && error.message ? error.message : '処理を完了できませんでした。', true);
+}
+function refresh(doneMessage) {
+  google.script.run.withSuccessHandler(function(next) {
+    applyState(next);
+    if (doneMessage) setMessage(doneMessage, false);
+  }).withFailureHandler(fail).getTABANESidebarState();
+}
+el('corner').addEventListener('change', renderPreview);
+el('band').addEventListener('input', renderPreview);
+el('reserve').addEventListener('click', function() {
+  if (el('reserve').disabled) return;
+  var band = Number(el('band').value);
+  if (Math.floor(band) !== band || band < 48 || band > 180) {
+    setMessage('帯の高さは48〜180ptで指定してください。', true);
+    return;
+  }
+  setBusy(true); setMessage('QRの予約を反映しています…', false);
+  google.script.run.withSuccessHandler(function() {
+    refresh('QRを予約しました。');
+  }).withFailureHandler(fail).reserveTABANEQr({
+    corner: el('corner').value,
+    bandHeightPt: band,
+    label: el('label').value
+  });
+});
+el('release').addEventListener('click', function() {
+  if (el('release').disabled) return;
+  setBusy(true); setMessage('予約を解除しています…', false);
+  google.script.run.withSuccessHandler(function() {
+    refresh('予約を解除し、上余白を元に戻しました。');
+  }).withFailureHandler(fail).releaseTABANEQr();
+});
+el('save-label').addEventListener('click', function() {
+  if (el('save-label').disabled) return;
+  setBusy(true); setMessage('名前を反映しています…', false);
+  google.script.run.withSuccessHandler(function() {
+    refresh('名前を反映しました。');
+  }).withFailureHandler(fail).updateTABANEReservationLabel(el('label').value);
+});
+refresh();
+</script></body></html>

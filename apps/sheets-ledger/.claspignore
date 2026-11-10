@@ -1,0 +1,13 @@
+**/*
+!appsscript.json
+!Code.gs
+!Roster.gs
+!SeatChart.gs
+!Reservation.gs
+!Issuance.gs
+!ScanImport.gs
+!QrCode.gs
+!QrImage.gs
+!Import.html
+!RosterImport.html
+!Settings.html

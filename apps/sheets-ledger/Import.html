@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8">
+<style>
+body{margin:0;padding:18px;font:13px system-ui,sans-serif;color:#1c352e;background:#f9fbf8}h1{font-size:18px;margin:0 0 8px}p{line-height:1.6;margin:6px 0}.muted{color:#63766c;font-size:12px}.error{color:#9c3030}.ok{color:#176a54}button{padding:9px 14px;margin-top:12px;background:#176a54;color:white;border:0;border-radius:6px;font:inherit;cursor:pointer}button:disabled{opacity:.5;cursor:default}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#edf4ed;border-radius:6px;padding:10px;font:12px/1.55 ui-monospace,monospace;margin-top:12px}
+</style></head><body>
+<h1>QR結果を読み取る</h1>
+<p>スキャン道具からダウンロードしたCSVを選んでください。形式は <span class="muted">scan_id, scanned_at, source_file, page, token, status, note</span> です。</p>
+<label>CSVファイル <input id="file" type="file" accept=".csv,text/csv"></label>
+<button id="run" disabled>取り込む</button>
+<p id="status" role="status" class="muted">ファイルを選んでください。</p>
+<pre id="result" hidden></pre>
+<script>
+var fileInput = document.getElementById('file');
+var run = document.getElementById('run');
+var status = document.getElementById('status');
+var result = document.getElementById('result');
+fileInput.addEventListener('change', function() {
+  run.disabled = !fileInput.files || !fileInput.files.length;
+  status.className = 'muted';
+  status.textContent = run.disabled ? 'ファイルを選んでください。' : '「取り込む」を押してください。';
+});
+run.addEventListener('click', function() {
+  var file = fileInput.files && fileInput.files[0];
+  if (!file) return;
+  run.disabled = true;
+  status.className = 'muted';
+  status.textContent = 'CSVを読み込んでいます…';
+  var reader = new FileReader();
+  reader.onerror = function() {
+    run.disabled = false;
+    status.className = 'error';
+    status.textContent = 'CSVを読み込めませんでした。';
+  };
+  reader.onload = function() {
+    var text = String(reader.result || '');
+    status.textContent = '台帳へ取り込んでいます…';
+    google.script.run.withSuccessHandler(function(value) {
+      run.disabled = false;
+      status.className = 'ok';
+      status.textContent = '取り込みが完了しました。';
+      result.hidden = false;
+      result.textContent = value.message || '';
+    }).withFailureHandler(function(error) {
+      run.disabled = false;
+      status.className = 'error';
+      status.textContent = error && error.message ? error.message : '取り込めませんでした。';
+    }).importTABANEScanCsv({fileName: file.name, text: text});
+  };
+  reader.readAsText(file, 'UTF-8');
+});
+</script></body></html>

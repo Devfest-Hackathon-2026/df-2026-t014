@@ -1,0 +1,71 @@
+.paperflow-pdf-preview {
+  width: 100%;
+  min-width: 0;
+  background: #edf0ec;
+}
+.paperflow-pdf-title {
+  margin: 0;
+  padding: 12px 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.paperflow-pdf-toolbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 16px;
+  background: #fff;
+  border-bottom: 1px solid #dce3d6;
+}
+.paperflow-pdf-page {
+  min-width: 100px;
+  text-align: center;
+  font-size: 13px;
+  color: #536747;
+  font-variant-numeric: tabular-nums;
+}
+.paperflow-pdf-stage {
+  min-height: 260px;
+  max-height: 65vh;
+  padding: 18px;
+  overflow: auto;
+}
+.paperflow-pdf-image {
+  display: block;
+  width: 100%;
+  max-width: 900px;
+  height: auto;
+  margin: 0 auto;
+  background: #fff;
+  box-shadow: 0 2px 12px #263c2420;
+}
+.paperflow-pdf-message {
+  padding: 80px 16px;
+  text-align: center;
+  color: #687762;
+  font-size: 13px;
+}
+.paperflow-pdf-error {
+  max-width: 680px;
+  margin: 32px auto;
+}
+.paperflow-pdf-error > .button {
+  margin-top: 12px;
+}
+@media (max-width: 560px) {
+  .paperflow-pdf-toolbar {
+    gap: 8px;
+    padding: 10px 8px;
+  }
+  .paperflow-pdf-toolbar .button {
+    padding: 8px 10px;
+  }
+  .paperflow-pdf-page {
+    min-width: 80px;
+    font-size: 11px;
+  }
+  .paperflow-pdf-stage {
+    padding: 8px;
+  }
+}

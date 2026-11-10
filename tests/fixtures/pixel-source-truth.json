@@ -1,0 +1,952 @@
+{
+  "collection": {
+    "id": "d1fae379105e338d5ce24df5d98795e3",
+    "versionId": "74798a437fc08e150df9a1008fbfe7ed",
+    "title": "画素試験",
+    "className": "架空",
+    "dueDate": "",
+    "sourceName": "サンプル原稿",
+    "createdAt": "2026-11-09T17:22:22.040Z",
+    "pageCount": 2,
+    "requiredPages": [
+      1,
+      2
+    ],
+    "qrCorner": "top-right",
+    "duplex": false,
+    "order": "number",
+    "reverse": false,
+    "startCorner": "top-left",
+    "recipients": [
+      {
+        "id": "S01",
+        "name": "架空A",
+        "number": 1,
+        "seat": null
+      },
+      {
+        "id": "S02",
+        "name": "架空B",
+        "number": 2,
+        "seat": null
+      }
+    ],
+    "tokens": [
+      {
+        "token": "93bffdc685f34642157eeb7efa5cadd6",
+        "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+        "versionId": "74798a437fc08e150df9a1008fbfe7ed",
+        "studentId": "S01",
+        "pageNumber": 1,
+        "kind": "content",
+        "required": true
+      },
+      {
+        "token": "840b2280aba8852a21033b4cd3bba913",
+        "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+        "versionId": "74798a437fc08e150df9a1008fbfe7ed",
+        "studentId": "S01",
+        "pageNumber": 2,
+        "kind": "content",
+        "required": true
+      },
+      {
+        "token": "a0c747804ff0e5fdfbaf2ae45a72c382",
+        "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+        "versionId": "74798a437fc08e150df9a1008fbfe7ed",
+        "studentId": "S02",
+        "pageNumber": 1,
+        "kind": "content",
+        "required": true
+      },
+      {
+        "token": "84a8ae845572fb038d00c4b4d031987d",
+        "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+        "versionId": "74798a437fc08e150df9a1008fbfe7ed",
+        "studentId": "S02",
+        "pageNumber": 2,
+        "kind": "content",
+        "required": true
+      }
+    ],
+    "status": "ready",
+    "logicalCollectionId": "d1fae379105e338d5ce24df5d98795e3",
+    "revision": 1,
+    "layoutMode": "reserved-corner",
+    "showNames": true,
+    "recipientStates": {
+      "S01": "required",
+      "S02": "required"
+    }
+  },
+  "results": [
+    {
+      "ids": [
+        "PF-F139"
+      ],
+      "name": "logical page 2 actual QR",
+      "startedAt": "2026-11-09T17:22:22.040Z",
+      "observed": [
+        {
+          "id": "68f9dce9-322b-4f93-a36c-a049b30fc77d",
+          "sourcePage": 1,
+          "status": "matched",
+          "resolution": "accepted",
+          "token": "840b2280aba8852a21033b4cd3bba913",
+          "studentId": "S01",
+          "pageNumber": 2,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:22.403Z"
+    },
+    {
+      "ids": [
+        "PF-F140"
+      ],
+      "name": "shuffled paper order",
+      "startedAt": "2026-11-09T17:22:22.403Z",
+      "observed": [
+        {
+          "id": "9d0c7104-92ab-4d8e-b675-40d41eba3b24",
+          "sourcePage": 1,
+          "status": "matched",
+          "resolution": "accepted",
+          "token": "84a8ae845572fb038d00c4b4d031987d",
+          "studentId": "S02",
+          "pageNumber": 2,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed"
+        },
+        {
+          "id": "2e80dc80-6ad5-4fad-97ba-dd65ae8bae8e",
+          "sourcePage": 2,
+          "status": "matched",
+          "resolution": "accepted",
+          "token": "93bffdc685f34642157eeb7efa5cadd6",
+          "studentId": "S01",
+          "pageNumber": 1,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed"
+        },
+        {
+          "id": "d55996cf-27d3-4484-b405-9286780057cf",
+          "sourcePage": 3,
+          "status": "matched",
+          "resolution": "accepted",
+          "token": "a0c747804ff0e5fdfbaf2ae45a72c382",
+          "studentId": "S02",
+          "pageNumber": 1,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed"
+        },
+        {
+          "id": "4c9ddabb-86ed-4ca3-b29e-2775a42cbe13",
+          "sourcePage": 4,
+          "status": "matched",
+          "resolution": "accepted",
+          "token": "840b2280aba8852a21033b4cd3bba913",
+          "studentId": "S01",
+          "pageNumber": 2,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:23.419Z"
+    },
+    {
+      "ids": [
+        "PF-F141"
+      ],
+      "name": "duplicate within PDF",
+      "startedAt": "2026-11-09T17:22:23.419Z",
+      "observed": [
+        {
+          "id": "2ac7fb7e-c7f6-4927-a171-951c2802627a",
+          "sourcePage": 1,
+          "status": "matched",
+          "resolution": "accepted",
+          "token": "93bffdc685f34642157eeb7efa5cadd6",
+          "studentId": "S01",
+          "pageNumber": 1,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed"
+        },
+        {
+          "id": "ed7448d8-de60-4496-a36f-364ba3e32a8c",
+          "sourcePage": 2,
+          "status": "duplicate",
+          "resolution": "pending",
+          "token": "93bffdc685f34642157eeb7efa5cadd6",
+          "studentId": "S01",
+          "pageNumber": 1,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed",
+          "reason": "同じ生徒・版・ページの記録が存在します。自動で上書きしません。"
+        },
+        {
+          "id": "2e7ea21b-35cd-4e11-88c9-975aea969c7c",
+          "sourcePage": 3,
+          "status": "matched",
+          "resolution": "accepted",
+          "token": "840b2280aba8852a21033b4cd3bba913",
+          "studentId": "S01",
+          "pageNumber": 2,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:24.204Z"
+    },
+    {
+      "ids": [
+        "PF-F142"
+      ],
+      "name": "duplicate from existing receipt",
+      "startedAt": "2026-11-09T17:22:24.204Z",
+      "observed": [
+        {
+          "id": "cfb9dbca-fce5-40d5-aa76-eb3ff7844a61",
+          "sourcePage": 1,
+          "status": "duplicate",
+          "resolution": "pending",
+          "token": "93bffdc685f34642157eeb7efa5cadd6",
+          "studentId": "S01",
+          "pageNumber": 1,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed",
+          "reason": "同じ生徒・版・ページの記録が存在します。自動で上書きしません。"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:24.536Z"
+    },
+    {
+      "ids": [
+        "PF-F143"
+      ],
+      "name": "unknown opaque QR",
+      "startedAt": "2026-11-09T17:22:24.536Z",
+      "observed": [
+        {
+          "id": "59e1df21-7ecd-4951-89fc-09196851f1ad",
+          "sourcePage": 1,
+          "status": "unknown",
+          "resolution": "pending",
+          "token": "ffffffffffffffffffffffffffffffff",
+          "reason": "この端末の台帳に登録されていないQRです。"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:25.378Z"
+    },
+    {
+      "ids": [
+        "PF-F144"
+      ],
+      "name": "unknown opaque QR",
+      "startedAt": "2026-11-09T17:22:25.378Z",
+      "observed": [
+        {
+          "id": "88ab4b72-0340-4cc3-b5b1-60dec9add5b0",
+          "sourcePage": 1,
+          "status": "unknown",
+          "resolution": "pending",
+          "token": "AbCdEfGhIjKlMnOpQrSt_1",
+          "reason": "この端末の台帳に登録されていないQRです。"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:26.250Z"
+    },
+    {
+      "ids": [
+        "PF-F145"
+      ],
+      "name": "URL only",
+      "startedAt": "2026-11-09T17:22:26.250Z",
+      "observed": [
+        {
+          "id": "7503d9a9-29a0-4f4f-8465-371d684fc2d8",
+          "sourcePage": 1,
+          "status": "unreadable",
+          "resolution": "pending",
+          "reason": "管理用QRが見つかりません。他用途のQRは照合に使用しません。"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:27.092Z"
+    },
+    {
+      "ids": [
+        "PF-F146"
+      ],
+      "name": "known plus URL",
+      "startedAt": "2026-11-09T17:22:27.092Z",
+      "observed": [
+        {
+          "id": "f1addd53-8a89-44e4-bf70-4680927373d3",
+          "sourcePage": 1,
+          "status": "matched",
+          "resolution": "accepted",
+          "token": "93bffdc685f34642157eeb7efa5cadd6",
+          "studentId": "S01",
+          "pageNumber": 1,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:27.435Z"
+    },
+    {
+      "ids": [
+        "PF-F147"
+      ],
+      "name": "corner plus center conflict",
+      "startedAt": "2026-11-09T17:22:27.435Z",
+      "observed": [
+        {
+          "id": "80ac4d32-d6e2-4e8d-b300-a678a4d43ac8",
+          "sourcePage": 1,
+          "status": "unreadable",
+          "resolution": "pending",
+          "reason": "複数の管理QRが見つかりました。元の紙を確認してください。"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:27.836Z"
+    },
+    {
+      "ids": [
+        "PF-F148"
+      ],
+      "name": "duplicate values are one token",
+      "startedAt": "2026-11-09T17:22:27.836Z",
+      "observed": [
+        {
+          "id": "93e7efa6-4fc2-41ae-a447-3bdbe18b8e5c",
+          "sourcePage": 1,
+          "status": "matched",
+          "resolution": "accepted",
+          "token": "93bffdc685f34642157eeb7efa5cadd6",
+          "studentId": "S01",
+          "pageNumber": 1,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:28.270Z"
+    },
+    {
+      "ids": [
+        "PF-F149"
+      ],
+      "name": "foreign two token conflict",
+      "startedAt": "2026-11-09T17:22:28.270Z",
+      "observed": [
+        {
+          "id": "64cd8a27-e157-4619-8cef-ce3d1f39e5f1",
+          "sourcePage": 1,
+          "status": "unreadable",
+          "resolution": "pending",
+          "reason": "複数の管理QRが見つかりました。元の紙を確認してください。"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:28.689Z"
+    },
+    {
+      "ids": [
+        "PF-F150"
+      ],
+      "name": "inactive token",
+      "startedAt": "2026-11-09T17:22:28.689Z",
+      "observed": [
+        {
+          "id": "473cfb13-b7e2-4940-9f07-e3058255caf3",
+          "sourcePage": 1,
+          "status": "unknown",
+          "resolution": "pending",
+          "token": "93bffdc685f34642157eeb7efa5cadd6",
+          "studentId": "S01",
+          "pageNumber": 1,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed",
+          "reason": "このQRは未発行または失効しています。発行状態を確認してください。"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:29.015Z"
+    },
+    {
+      "ids": [
+        "PF-F151"
+      ],
+      "name": "foreign collection or version",
+      "startedAt": "2026-11-09T17:22:29.015Z",
+      "observed": [
+        {
+          "id": "06ccb974-5bde-43f5-929e-7b669711555a",
+          "sourcePage": 1,
+          "status": "foreign",
+          "resolution": "pending",
+          "token": "93bffdc685f34642157eeb7efa5cadd6",
+          "studentId": "S01",
+          "pageNumber": 1,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed",
+          "reason": "別の配布物のQRです。対象を切り替えて取り込んでください。"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:29.351Z"
+    },
+    {
+      "ids": [
+        "PF-F152"
+      ],
+      "name": "foreign collection or version",
+      "startedAt": "2026-11-09T17:22:29.351Z",
+      "observed": [
+        {
+          "id": "a0c10072-98ae-4a4f-94a1-9082c65bc873",
+          "sourcePage": 1,
+          "status": "foreign",
+          "resolution": "pending",
+          "token": "93bffdc685f34642157eeb7efa5cadd6",
+          "studentId": "S01",
+          "pageNumber": 1,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed",
+          "reason": "別の配布物のQRです。対象を切り替えて取り込んでください。"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:29.686Z"
+    },
+    {
+      "ids": [
+        "PF-F153"
+      ],
+      "name": "foreign collection or version",
+      "startedAt": "2026-11-09T17:22:29.686Z",
+      "observed": [
+        {
+          "id": "c48c918f-1026-4f03-a852-4d74a7b2c781",
+          "sourcePage": 1,
+          "status": "foreign",
+          "resolution": "pending",
+          "token": "93bffdc685f34642157eeb7efa5cadd6",
+          "studentId": "S01",
+          "pageNumber": 1,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed",
+          "reason": "別の配布物のQRです。対象を切り替えて取り込んでください。"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:30.020Z"
+    },
+    {
+      "ids": [
+        "PF-F154"
+      ],
+      "name": "spacer exclusion",
+      "startedAt": "2026-11-09T17:22:30.020Z",
+      "observed": [
+        {
+          "id": "8a8fa145-e1d7-4395-8b2a-81bb4aa2eefe",
+          "sourcePage": 1,
+          "status": "spacer",
+          "resolution": "ignored",
+          "token": "93bffdc685f34642157eeb7efa5cadd6",
+          "studentId": "S01",
+          "pageNumber": 1,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed",
+          "reason": "両面印刷の調整ページ（返却不要）"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:30.350Z"
+    },
+    {
+      "ids": [
+        "PF-F155"
+      ],
+      "name": "valid token on unfilled paper",
+      "startedAt": "2026-11-09T17:22:30.350Z",
+      "observed": [
+        {
+          "id": "f1842d66-1f09-4114-8147-5f0bb23672b8",
+          "sourcePage": 1,
+          "status": "matched",
+          "resolution": "accepted",
+          "token": "93bffdc685f34642157eeb7efa5cadd6",
+          "studentId": "S01",
+          "pageNumber": 1,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:30.670Z"
+    },
+    {
+      "ids": [
+        "PF-F156"
+      ],
+      "name": "conflicting visible name does not change QR owner",
+      "startedAt": "2026-11-09T17:22:30.670Z",
+      "observed": [
+        {
+          "id": "d0f65e77-2209-4607-8588-2dc8cb7ca312",
+          "sourcePage": 1,
+          "status": "matched",
+          "resolution": "accepted",
+          "token": "93bffdc685f34642157eeb7efa5cadd6",
+          "studentId": "S01",
+          "pageNumber": 1,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:30.992Z"
+    },
+    {
+      "ids": [
+        "PF-F157"
+      ],
+      "name": "PDF metadata rotations",
+      "startedAt": "2026-11-09T17:22:30.992Z",
+      "observed": [
+        {
+          "rotation": 0,
+          "pages": [
+            {
+              "id": "725881b3-aaae-4b42-93dd-0297c786b512",
+              "sourcePage": 1,
+              "status": "matched",
+              "resolution": "accepted",
+              "token": "93bffdc685f34642157eeb7efa5cadd6",
+              "studentId": "S01",
+              "pageNumber": 1,
+              "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+              "versionId": "74798a437fc08e150df9a1008fbfe7ed"
+            }
+          ]
+        },
+        {
+          "rotation": 90,
+          "pages": [
+            {
+              "id": "70e291c6-e2ee-4d99-9bd7-01bbf510e432",
+              "sourcePage": 1,
+              "status": "matched",
+              "resolution": "accepted",
+              "token": "93bffdc685f34642157eeb7efa5cadd6",
+              "studentId": "S01",
+              "pageNumber": 1,
+              "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+              "versionId": "74798a437fc08e150df9a1008fbfe7ed"
+            }
+          ]
+        },
+        {
+          "rotation": 180,
+          "pages": [
+            {
+              "id": "e1c6d58f-30e2-425a-b531-cd8d0ab3e78f",
+              "sourcePage": 1,
+              "status": "matched",
+              "resolution": "accepted",
+              "token": "93bffdc685f34642157eeb7efa5cadd6",
+              "studentId": "S01",
+              "pageNumber": 1,
+              "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+              "versionId": "74798a437fc08e150df9a1008fbfe7ed"
+            }
+          ]
+        },
+        {
+          "rotation": 270,
+          "pages": [
+            {
+              "id": "4a76f341-264c-4d24-85ac-7aaadbd42fb7",
+              "sourcePage": 1,
+              "status": "matched",
+              "resolution": "accepted",
+              "token": "93bffdc685f34642157eeb7efa5cadd6",
+              "studentId": "S01",
+              "pageNumber": 1,
+              "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+              "versionId": "74798a437fc08e150df9a1008fbfe7ed"
+            }
+          ]
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:32.261Z"
+    },
+    {
+      "ids": [
+        "PF-F158"
+      ],
+      "name": "all corner preference/actual mismatches",
+      "startedAt": "2026-11-09T17:22:32.261Z",
+      "observed": [
+        {
+          "corner": "top-left",
+          "preferred": "top-left",
+          "status": "matched"
+        },
+        {
+          "corner": "top-left",
+          "preferred": "top-right",
+          "status": "matched"
+        },
+        {
+          "corner": "top-left",
+          "preferred": "bottom-left",
+          "status": "matched"
+        },
+        {
+          "corner": "top-left",
+          "preferred": "bottom-right",
+          "status": "matched"
+        },
+        {
+          "corner": "top-right",
+          "preferred": "top-left",
+          "status": "matched"
+        },
+        {
+          "corner": "top-right",
+          "preferred": "top-right",
+          "status": "matched"
+        },
+        {
+          "corner": "top-right",
+          "preferred": "bottom-left",
+          "status": "matched"
+        },
+        {
+          "corner": "top-right",
+          "preferred": "bottom-right",
+          "status": "matched"
+        },
+        {
+          "corner": "bottom-left",
+          "preferred": "top-left",
+          "status": "matched"
+        },
+        {
+          "corner": "bottom-left",
+          "preferred": "top-right",
+          "status": "matched"
+        },
+        {
+          "corner": "bottom-left",
+          "preferred": "bottom-left",
+          "status": "matched"
+        },
+        {
+          "corner": "bottom-left",
+          "preferred": "bottom-right",
+          "status": "matched"
+        },
+        {
+          "corner": "bottom-right",
+          "preferred": "top-left",
+          "status": "matched"
+        },
+        {
+          "corner": "bottom-right",
+          "preferred": "top-right",
+          "status": "matched"
+        },
+        {
+          "corner": "bottom-right",
+          "preferred": "bottom-left",
+          "status": "matched"
+        },
+        {
+          "corner": "bottom-right",
+          "preferred": "bottom-right",
+          "status": "matched"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:37.345Z"
+    },
+    {
+      "ids": [
+        "PF-F159"
+      ],
+      "name": "high resolution fallback actual canvas sizes",
+      "startedAt": "2026-11-09T17:22:37.345Z",
+      "observed": {
+        "sizes": [
+          {
+            "width": 1072,
+            "height": 1516
+          },
+          {
+            "width": 1667,
+            "height": 2358
+          }
+        ],
+        "pages": [
+          {
+            "id": "133c9706-1f4b-42ec-b38f-f6a0cf80fd10",
+            "sourcePage": 1,
+            "status": "unknown",
+            "resolution": "pending",
+            "token": "ffffffffffffffffffffffffffffffff",
+            "reason": "この端末の台帳に登録されていないQRです。"
+          }
+        ]
+      },
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:38.144Z"
+    },
+    {
+      "ids": [
+        "PF-F159"
+      ],
+      "name": "find real low-resolution failure/high-resolution recovery",
+      "startedAt": "2026-11-09T17:22:38.144Z",
+      "observed": [
+        {
+          "qrMm": 5,
+          "lowValues": [],
+          "highValues": []
+        },
+        {
+          "qrMm": 6,
+          "lowValues": [],
+          "highValues": []
+        },
+        {
+          "qrMm": 7,
+          "lowValues": [],
+          "highValues": [
+            "93bffdc685f34642157eeb7efa5cadd6"
+          ]
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:42.282Z"
+    },
+    {
+      "ids": [
+        "PF-F160"
+      ],
+      "name": "obscured QR not inferred from preceding page",
+      "startedAt": "2026-11-09T17:22:42.282Z",
+      "observed": [
+        {
+          "id": "21ff7e9f-6a7e-4a79-967e-42a11b3e52b7",
+          "sourcePage": 1,
+          "status": "matched",
+          "resolution": "accepted",
+          "token": "93bffdc685f34642157eeb7efa5cadd6",
+          "studentId": "S01",
+          "pageNumber": 1,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed"
+        },
+        {
+          "id": "2bec43ca-e5cb-4c84-82a2-d65ea8cbffb5",
+          "sourcePage": 2,
+          "status": "unreadable",
+          "resolution": "pending",
+          "reason": "QRを読み取れませんでした。再スキャンまたは手動で割り当ててください。"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:43.585Z"
+    },
+    {
+      "ids": [
+        "PF-F162"
+      ],
+      "name": "blank page stays pending",
+      "startedAt": "2026-11-09T17:22:43.585Z",
+      "observed": [
+        {
+          "id": "6d82eef0-a4cf-4576-b1de-1173293140e4",
+          "sourcePage": 1,
+          "status": "blank",
+          "resolution": "pending",
+          "reason": "空白の可能性があります。薄い記入を含めて画像を確認し、対象外にするか判断してください。"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:44.605Z"
+    },
+    {
+      "ids": [
+        "PF-F164"
+      ],
+      "name": "201 pages refuses before partial processing",
+      "startedAt": "2026-11-09T17:22:44.605Z",
+      "observed": {
+        "pages": 201,
+        "progress": 0,
+        "error": "Error: 回収PDFは200ページ以内に分けて選択してください。"
+      },
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:44.707Z"
+    },
+    {
+      "ids": [
+        "PF-F165"
+      ],
+      "name": "zero/corrupt/encrypted errors",
+      "startedAt": "2026-11-09T17:22:44.707Z",
+      "observed": [
+        "Error: PDFは100MiB以下のファイルを選択してください。",
+        "Error: PDFを描画できませんでした。パスワードを解除したPDFを選択してください。",
+        "Error: PDFを描画できませんでした。パスワードを解除したPDFを選択してください。"
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:44.900Z"
+    },
+    {
+      "ids": [
+        "PF-F166"
+      ],
+      "name": "canvas cap below/equal/above 12m",
+      "startedAt": "2026-11-09T17:22:44.900Z",
+      "observed": [
+        {
+          "target": 11999999,
+          "limited": 1.8,
+          "width": 3600,
+          "height": 3334
+        },
+        {
+          "target": 12000000,
+          "limited": 1.8,
+          "width": 3600,
+          "height": 3334
+        },
+        {
+          "target": 12000001,
+          "limited": 1.7999999250000047,
+          "width": 3600,
+          "height": 3334
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:45.231Z"
+    },
+    {
+      "ids": [
+        "PF-F167"
+      ],
+      "name": "cancel and rerun same input; final page cancellation",
+      "startedAt": "2026-11-09T17:22:45.231Z",
+      "observed": {
+        "out": [
+          {
+            "cancelAt": 1,
+            "error": "AbortError"
+          },
+          {
+            "cancelAt": 2,
+            "error": "AbortError"
+          }
+        ],
+        "pages": [
+          {
+            "id": "d7896f62-c4cb-4241-9897-796adb810055",
+            "sourcePage": 1,
+            "status": "matched",
+            "resolution": "accepted",
+            "token": "93bffdc685f34642157eeb7efa5cadd6",
+            "studentId": "S01",
+            "pageNumber": 1,
+            "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+            "versionId": "74798a437fc08e150df9a1008fbfe7ed"
+          },
+          {
+            "id": "7ba35884-4ed5-4556-b353-cda9195eda71",
+            "sourcePage": 2,
+            "status": "matched",
+            "resolution": "accepted",
+            "token": "840b2280aba8852a21033b4cd3bba913",
+            "studentId": "S01",
+            "pageNumber": 2,
+            "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+            "versionId": "74798a437fc08e150df9a1008fbfe7ed"
+          }
+        ]
+      },
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:46.636Z"
+    },
+    {
+      "ids": [
+        "PF-F168"
+      ],
+      "name": "all unreadable remains unassigned",
+      "startedAt": "2026-11-09T17:22:46.636Z",
+      "observed": [
+        {
+          "id": "f338c152-5534-4be5-8859-46605d4e80da",
+          "sourcePage": 1,
+          "status": "unreadable",
+          "resolution": "pending",
+          "reason": "QRを読み取れませんでした。再スキャンまたは手動で割り当ててください。"
+        },
+        {
+          "id": "a03f8a89-0f01-4c10-b99c-e743ca418321",
+          "sourcePage": 2,
+          "status": "unreadable",
+          "resolution": "pending",
+          "reason": "QRを読み取れませんでした。再スキャンまたは手動で割り当ててください。"
+        },
+        {
+          "id": "02dd8d28-d1fa-4672-b6e7-cff933862921",
+          "sourcePage": 3,
+          "status": "unreadable",
+          "resolution": "pending",
+          "reason": "QRを読み取れませんでした。再スキャンまたは手動で割り当ててください。"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:49.584Z"
+    },
+    {
+      "ids": [
+        "PF-F169"
+      ],
+      "name": "later missing page accepted while previous receipt remains separate",
+      "startedAt": "2026-11-09T17:22:49.584Z",
+      "observed": [
+        {
+          "id": "90f3bed7-7432-48f6-8fda-bf25c11857b5",
+          "sourcePage": 1,
+          "status": "matched",
+          "resolution": "accepted",
+          "token": "840b2280aba8852a21033b4cd3bba913",
+          "studentId": "S01",
+          "pageNumber": 2,
+          "collectionId": "d1fae379105e338d5ce24df5d98795e3",
+          "versionId": "74798a437fc08e150df9a1008fbfe7ed"
+        }
+      ],
+      "pass": true,
+      "finishedAt": "2026-11-09T17:22:49.924Z"
+    }
+  ]
+}

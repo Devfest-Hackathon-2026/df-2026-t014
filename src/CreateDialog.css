@@ -1,0 +1,68 @@
+.create-layout.paperflow-create-layout {
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+}
+.paperflow-create-fields {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.paperflow-source-preview {
+  min-width: 0;
+  width: 100%;
+  padding: 18px;
+}
+.paperflow-source-preview .paperflow-pdf-stage {
+  max-height: 54vh;
+  padding: 10px;
+}
+.paperflow-source-preview .paperflow-pdf-toolbar {
+  gap: 6px;
+  padding: 8px;
+}
+.paperflow-source-preview .paperflow-pdf-toolbar button {
+  padding: 8px;
+}
+.paperflow-source-preview .paperflow-pdf-page {
+  min-width: 84px;
+  font-size: 11px;
+}
+.paperflow-print-facts {
+  text-align: left;
+  margin: 18px 0;
+}
+.paperflow-print-facts p {
+  font-size: 12px;
+  line-height: 1.7;
+}
+.paperflow-source-preview .preview-confirm-progress {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.paperflow-create-fields .notice {
+  margin-bottom: 14px;
+}
+.paperflow-create-fields .check-row {
+  flex-wrap: wrap;
+}
+.paperflow-preview-tabs {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0;
+}
+.paperflow-preview-tabs button {
+  flex: 1;
+  padding: 8px;
+  font-size: 11px;
+}
+@media (max-width: 900px) {
+  .create-layout.paperflow-create-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .paperflow-create-fields {
+    grid-row: 1;
+  }
+  .paperflow-source-preview {
+    display: block;
+  }
+}
