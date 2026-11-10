@@ -348,17 +348,13 @@ function ledger(options: LedgerOptions = {}) {
     return body;
   }
 
-  function makePrintFile(id: string) {
+  function makePrintFile(id: string, name = "") {
     const file: Record<string, unknown> = {
       id,
-      getId: () => id,
-      getUrl: () => `https://drive.google.com/file/d/${id}/view`,
-      setName: (name: string) => {
-        file.name = name;
-        return file;
-      },
-      moveTo: () => file,
-      setTrashed: () => undefined,
+      name,
+      mimeType: "application/vnd.google-apps.document",
+      trashed: false,
+      parents: [] as string[],
     };
     return file;
   }
@@ -367,30 +363,8 @@ function ledger(options: LedgerOptions = {}) {
     const folder: Record<string, unknown> = {
       id,
       name,
+      mimeType: "application/vnd.google-apps.folder",
       trashed: false,
-      getId: () => id,
-      getName: () => name,
-      setName: (next: string) => {
-        folder.name = next;
-        return folder;
-      },
-      isTrashed: () => folder.trashed === true,
-      setTrashed: (value: boolean) => {
-        folder.trashed = value;
-        return folder;
-      },
-      createFile: (blob: unknown) => {
-        if (drive.failNextPdf) {
-          drive.failNextPdf = false;
-          throw new Error("PDFを保存できません");
-        }
-        const fileId = `pdf-${pdfs.length + 1}`;
-        const file = makePrintFile(fileId);
-        file.blob = blob;
-        pdfs.push(file);
-        filesById.set(fileId, file);
-        return file;
-      },
     };
     folders.set(id, folder);
     return folder;
@@ -465,21 +439,49 @@ function ledger(options: LedgerOptions = {}) {
         };
       },
     },
-    DriveApp: {
-      createFolder: (name: string) => {
-        drive.createFolderCalls += 1;
-        folderCount += 1;
-        return makeOutputFolder(`folder-${folderCount}`, name);
-      },
-      getFolderById: (id: string) => {
-        const folder = folders.get(id);
-        if (!folder) throw new Error("not found");
-        return folder;
-      },
-      getFileById: (id: string) => {
-        const file = filesById.get(id);
-        if (!file) throw new Error("not found");
-        return file;
+    Drive: {
+      Files: {
+        create: (resource: Record<string, unknown>, media?: unknown) => {
+          if (media && drive.failNextPdf) {
+            drive.failNextPdf = false;
+            throw new Error("PDFを保存できません");
+          }
+          if (resource.mimeType === "application/vnd.google-apps.folder") {
+            drive.createFolderCalls += 1;
+            folderCount += 1;
+            return makeOutputFolder(`folder-${folderCount}`, String(resource.name));
+          }
+          const fileId = `pdf-${pdfs.length + 1}`;
+          const file = makePrintFile(fileId, String(resource.name ?? ""));
+          file.blob = media;
+          file.parents = [...((resource.parents as string[] | undefined) ?? [])];
+          pdfs.push(file);
+          filesById.set(fileId, file);
+          return file;
+        },
+        get: (fileId: string) => {
+          const file = folders.get(fileId) ?? filesById.get(fileId);
+          if (!file) throw new Error("not found");
+          return file;
+        },
+        update: (
+          resource: Record<string, unknown>,
+          fileId: string,
+          _media?: unknown,
+          options?: { addParents?: string; removeParents?: string },
+        ) => {
+          const file = folders.get(fileId) ?? filesById.get(fileId);
+          if (!file) throw new Error("not found");
+          Object.assign(file, resource);
+          const parents = new Set((file.parents as string[] | undefined) ?? []);
+          if (options?.addParents) parents.add(options.addParents);
+          if (options?.removeParents)
+            String(options.removeParents)
+              .split(",")
+              .forEach((parent) => parents.delete(parent));
+          file.parents = [...parents];
+          return file;
+        },
       },
     },
   };
@@ -1806,38 +1808,38 @@ describe("TABANE ledger output folder", () => {
     const env = ledger();
     const first = env.api.getOutputFolder_();
     expect(env.drive.createFolderCalls).toBe(1);
-    expect(first.getName()).toBe("TABANE 発行");
+    expect(first.name).toBe("TABANE 発行");
     const stored = env.api.getTABANELedgerSettings();
-    expect(stored.outputFolderId).toBe(first.getId());
+    expect(stored.outputFolderId).toBe(first.id);
     expect(stored.outputFolderCreatedName).toBe("TABANE 発行");
 
     const second = env.api.getOutputFolder_();
     expect(env.drive.createFolderCalls).toBe(1);
-    expect(second.getId()).toBe(first.getId());
+    expect(second.id).toBe(first.id);
 
     // Drive 上で名前を変えただけでは作り直さない（設定の名前は変えていない）。
-    first.setName("先生がDriveで改名");
+    env.folders.get(first.id as string)!.name = "先生がDriveで改名";
     const third = env.api.getOutputFolder_();
     expect(env.drive.createFolderCalls).toBe(1);
-    expect(third.getId()).toBe(first.getId());
-    expect(env.api.getTABANELedgerSettings().outputFolderId).toBe(first.getId());
+    expect(third.id).toBe(first.id);
+    expect(env.api.getTABANELedgerSettings().outputFolderId).toBe(first.id);
   });
 
   it("recreates the folder when the saved folder is trashed or no longer accessible", () => {
     const env = ledger();
     const first = env.api.getOutputFolder_();
-    first.setTrashed(true);
+    env.folders.get(first.id as string)!.trashed = true;
     const second = env.api.getOutputFolder_();
     expect(env.drive.createFolderCalls).toBe(2);
-    expect(second.getId()).not.toBe(first.getId());
-    expect(env.api.getTABANELedgerSettings().outputFolderId).toBe(second.getId());
+    expect(second.id).not.toBe(first.id);
+    expect(env.api.getTABANELedgerSettings().outputFolderId).toBe(second.id);
 
-    env.folders.delete(second.getId() as string);
+    env.folders.delete(second.id as string);
     const third = env.api.getOutputFolder_();
     expect(env.drive.createFolderCalls).toBe(3);
-    expect(third.getId()).not.toBe(second.getId());
+    expect(third.id).not.toBe(second.id);
     const updated = env.api.getTABANELedgerSettings();
-    expect(updated.outputFolderId).toBe(third.getId());
+    expect(updated.outputFolderId).toBe(third.id);
     expect(updated.outputFolderCreatedName).toBe("TABANE 発行");
   });
 
@@ -1846,14 +1848,14 @@ describe("TABANE ledger output folder", () => {
     const first = env.api.getOutputFolder_();
     env.api.saveTABANELedgerSettings({ outputFolderName: "別の出力先" });
     // ダイアログは名前しか送らないので、保存時点では ID を保つ。
-    expect(env.api.getTABANELedgerSettings().outputFolderId).toBe(first.getId());
+    expect(env.api.getTABANELedgerSettings().outputFolderId).toBe(first.id);
 
     const second = env.api.getOutputFolder_();
     expect(env.drive.createFolderCalls).toBe(2);
-    expect(second.getName()).toBe("別の出力先");
-    expect(second.getId()).not.toBe(first.getId());
+    expect(second.name).toBe("別の出力先");
+    expect(second.id).not.toBe(first.id);
     const updated = env.api.getTABANELedgerSettings();
-    expect(updated.outputFolderId).toBe(second.getId());
+    expect(updated.outputFolderId).toBe(second.id);
     expect(updated.outputFolderCreatedName).toBe("別の出力先");
   });
 
@@ -1885,5 +1887,8 @@ describe("TABANE ledger manifest", () => {
       "https://www.googleapis.com/auth/script.container.ui",
     ]);
     expect(manifest.addOns).toBeUndefined();
+    expect(manifest.dependencies.enabledAdvancedServices).toEqual([
+      { userSymbol: "Drive", serviceId: "drive", version: "v3" },
+    ]);
   });
 });

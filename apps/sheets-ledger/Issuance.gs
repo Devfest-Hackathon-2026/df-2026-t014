@@ -100,12 +100,36 @@ function findResumableIssuance_(ledger, sourceDocumentId) {
 function findReusableDriveFile_(id) {
   if (!id) return null;
   try {
-    var file = DriveApp.getFileById(String(id));
-    if (typeof file.isTrashed === 'function' && file.isTrashed()) return null;
+    var file = Drive.Files.get(String(id), { fields: 'id,name,mimeType,trashed' });
+    if (!file || file.trashed) return null;
     return file;
   } catch (error) {
     return null;
   }
+}
+
+/**
+ * 印刷用Docを出力フォルダへ移す。
+ * Drive API v3 には move がないため、addParents / removeParents で付け替える。
+ */
+function moveDriveFileToFolder_(fileId, folderId) {
+  var file = Drive.Files.get(String(fileId), { fields: 'id,parents' });
+  var parents = (file && file.parents) || [];
+  var removeParents = parents.filter(function(parent) {
+    return String(parent) !== String(folderId);
+  });
+  var args = { addParents: String(folderId) };
+  if (removeParents.length) args.removeParents = removeParents.join(',');
+  Drive.Files.update({}, String(fileId), null, args);
+}
+
+/** PDF を出力フォルダへ保存する。戻り値は Drive API の File リソース。 */
+function savePdfToOutputFolder_(folder, blob, name) {
+  return Drive.Files.create({
+    name: name,
+    mimeType: 'application/pdf',
+    parents: [String(folder.id)]
+  }, blob, { fields: 'id,name,mimeType,trashed' });
 }
 
 /** 作成済みの印刷用Docを開き、PDFを作り直す（再開時にDocを作り直さないため）。 */
@@ -303,12 +327,11 @@ function issueTABANEQr(input) {
     if (!pdfFile) {
       folder = getOutputFolder_(settings);
       try {
-        DriveApp.getFileById(built.id).moveTo(folder);
+        moveDriveFileToFolder_(built.id, folder.id);
       } catch (moveError) {
         warnings.push('印刷用Docを「' + (settings.outputFolderName || PAPERFLOW_DEFAULT_OUTPUT_FOLDER) + '」へ移動できませんでした。Driveのルートを確認してください。');
       }
-      pdfFile = folder.createFile(built.pdfBlob);
-      pdfFile.setName(job.title + ' 印刷用 ' + paperFlowTimestamp_() + '.pdf');
+      pdfFile = savePdfToOutputFolder_(folder, built.pdfBlob, job.title + ' 印刷用 ' + paperFlowTimestamp_() + '.pdf');
     }
   } catch (saveError) {
     var saveMessage = ('印刷用Docは作成しました（' + printDocumentUrl + '）が、PDFの保存に失敗しました。' + saveError.message).slice(0, 1000);
@@ -324,7 +347,7 @@ function issueTABANEQr(input) {
     throw new Error(saveMessage + ' 発行済みトークンは台帳に残しています。原因を直してもう一度「QRを発行」してください。');
   }
 
-  var pdfUrl = pdfFile.getUrl ? pdfFile.getUrl() : 'https://drive.google.com/file/d/' + pdfFile.getId() + '/view';
+  var pdfUrl = 'https://drive.google.com/file/d/' + pdfFile.id + '/view';
   var note = [
     'QRは各生徒の先頭ページに1つ配置しています。',
     reservation
@@ -334,7 +357,7 @@ function issueTABANEQr(input) {
 
   setLedgerField_(issueLedger, issueRowNumber, 'printDocumentId', built.id);
   setLedgerField_(issueLedger, issueRowNumber, 'printDocumentUrl', printDocumentUrl);
-  setLedgerField_(issueLedger, issueRowNumber, 'pdfFileId', pdfFile.getId());
+  setLedgerField_(issueLedger, issueRowNumber, 'pdfFileId', pdfFile.id);
   setLedgerField_(issueLedger, issueRowNumber, 'pdfUrl', pdfUrl);
   setLedgerField_(issueLedger, issueRowNumber, 'note', note);
   setLedgerField_(issueLedger, issueRowNumber, 'status', '完了');
@@ -467,7 +490,7 @@ function buildPrintDocument_(tab, job, students, tokensByStudent, reservation) {
     return { id: printDocId, pdfBlob: pdfBlob, warnings: warnings };
   } catch (error) {
     // 失敗した中途半端な印刷用Docを残さない（消せない環境でも処理は続ける）。
-    try { DriveApp.getFileById(printDocId).setTrashed(true); } catch (trashError) { /* 手動で確認する */ }
+    try { Drive.Files.update({ trashed: true }, printDocId); } catch (trashError) { /* 手動で確認する */ }
     throw new Error('印刷用Docの組み立てに失敗しました。' + error.message);
   }
 }

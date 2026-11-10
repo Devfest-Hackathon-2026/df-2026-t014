@@ -23,6 +23,8 @@ var PAPERFLOW_LEDGER_TAB_SUBMISSIONS_PREFIX = '提出一覧';
 var PAPERFLOW_SETTINGS_KEY = 'PAPERFLOW_LEDGER_SETTINGS_V1';
 var PAPERFLOW_DEFAULT_OUTPUT_FOLDER = 'TABANE 発行';
 var PAPERFLOW_DEFAULT_ROSTER_SHEET = '名簿';
+/** Drive のフォルダを表す MIME タイプ（Drive API v3 でフォルダを作るときに使う）。 */
+var PAPERFLOW_DRIVE_FOLDER_MIME = 'application/vnd.google-apps.folder';
 
 var PAPERFLOW_MAX_STUDENTS = 60;
 var PAPERFLOW_MAX_SCAN_BYTES = 5 * 1024 * 1024;
@@ -795,14 +797,17 @@ function readLedgerRecords_(ledger, headers) {
 /**
  * 出力フォルダを解決する。
  *
- * drive.file スコープではフォルダの名前検索を呼べないため、
+ * Drive の組み込みサービスの createFolder / getFolderById は
+ * drive.file では呼べないため、Drive 高度なサービス（Drive API v3）を使う。
  * 初回にフォルダを作って ID を設定へ保存し、以後は ID で開く。
  * ID で追うので、先生が Drive 上でフォルダを移動・改名しても同じフォルダへ出し続ける。
  *
  * 分岐:
  *   a. 設定のフォルダ名が「作成時に使ったフォルダ名」と違う → 新しい名前で作成し直す
- *   b. ID があり、getFolderById で開けてゴミ箱でもない → そのフォルダを使う
+ *   b. ID があり、Drive.Files.get で開けてゴミ箱でもない → そのフォルダを使う
  *   c. ID がない／開けない／ゴミ箱 → 作成して ID と作成名を保存する
+ *
+ * 戻り値は Drive API の File リソース（`id` / `name` を持つ）。
  */
 function getOutputFolder_(settings) {
   var current = settings || readTABANELedgerSettings_();
@@ -819,9 +824,8 @@ function getOutputFolder_(settings) {
 /** ID から出力フォルダを開く。開けない・ゴミ箱の場合は null。 */
 function openOutputFolderById_(id) {
   try {
-    var folder = DriveApp.getFolderById(id);
-    if (!folder) return null;
-    if (typeof folder.isTrashed === 'function' && folder.isTrashed()) return null;
+    var folder = Drive.Files.get(String(id), { fields: 'id,name,mimeType,trashed' });
+    if (!folder || folder.trashed) return null;
     return folder;
   } catch (error) {
     return null;
@@ -830,8 +834,11 @@ function openOutputFolderById_(id) {
 
 /** 出力フォルダを作り、ID と作成時の名前を設定へ保存する。 */
 function createOutputFolder_(settings, name) {
-  var folder = DriveApp.createFolder(name);
-  settings.outputFolderId = folder.getId();
+  var folder = Drive.Files.create({
+    name: name,
+    mimeType: PAPERFLOW_DRIVE_FOLDER_MIME
+  }, null, { fields: 'id,name,mimeType,trashed' });
+  settings.outputFolderId = folder.id;
   settings.outputFolderCreatedName = name;
   try {
     PropertiesService.getScriptProperties().setProperty(PAPERFLOW_SETTINGS_KEY, JSON.stringify(settings));

@@ -236,7 +236,9 @@ CSV が複数の配布物にまたがる場合は、対応表の `collectionId` 
 出力フォルダは初回発行時に自動作成し、その ID をスクリプトプロパティに保存します。
 以後は ID で開くため、先生が Drive 上でフォルダを移動・名前変更しても同じフォルダへ出力し続けます。
 設定でフォルダ名を変えたときだけ、新しい名前のフォルダを作り直します。
-（`drive.file` スコープではフォルダの名前検索ができないため、コード内で名前検索は使いません。）
+（`drive.file` スコープではフォルダの名前検索ができないため、コード内で名前検索は使いません。
+また、組み込みサービスのフォルダ作成は `drive` 全体の権限を要求するため、フォルダ作成・移動・PDF 保存は
+Drive 高度なサービス（Drive API v3）で行います。）
 
 制約:
 
@@ -286,7 +288,7 @@ CSV が複数の配布物にまたがる場合は、対応表の `collectionId` 
 設定ダイアログには表示しません。フォルダの解決は次の順です。
 
 1. 設定の「出力フォルダ名」が作成時の名前と違う → 新しい名前でフォルダを作り、ID と作成名を更新する。
-2. ID があり `getFolderById` で開けて、ゴミ箱に入っていない → そのフォルダを使う。
+2. ID があり `Drive.Files.get` で開けて、ゴミ箱に入っていない → そのフォルダを使う。
 3. ID がない・開けない・ゴミ箱 → フォルダを作り、ID と作成名を保存する。
 
 Drive 上でフォルダを移動・改名しても、設定の「出力フォルダ名」を変えない限り作り直しません。
@@ -302,9 +304,13 @@ Drive 上でフォルダを移動・改名しても、設定の「出力フォ�
 | `drive.file` | このスクリプトが作成した印刷用 Doc と PDF の保存・移動。Drive 全体は要求しない。 |
 | `script.container.ui` | メニューから CSV 取り込み・設定のモーダルダイアログを表示するため。 |
 
+Drive のファイル・フォルダ操作には Drive 高度なサービス（v3）を使います。
+`appsscript.json` の `dependencies.enabledAdvancedServices` に `Drive` を宣言していますが、
+上の 4 スコープは変えていません（`drive` は要求しません）。
+
 ## テスト
 
-`Code.test.ts` は SpreadsheetApp／DocumentApp／DriveApp／Utilities をモックし、
+`Code.test.ts` は SpreadsheetApp／DocumentApp／Drive（高度なサービス）／Utilities をモックし、
 `runInNewContext` で `.gs` をまとめて実行します。カバー範囲:
 
 - 初期設定（タブ・見出しの作成、既存タブを壊さない、名簿の不足列を足す、旧QR発行レイアウトの移行）
@@ -345,8 +351,9 @@ npm test
 - 名簿が別スプレッドシートにある場合の座席表編集（単純トリガーの権限で `openById` できるか）
 - 実際のスキャン PDF とスキャン道具が出力する CSV の組み合わせ
 - テンプレートとしてコピー配布したときのスクリプトプロパティの初期状態
+- コピー先で Drive 高度なサービスが有効なまま引き継がれるか（マニフェスト宣言のみで未確認）
 
 参照: [Apps Script のスプレッドシート拡張](https://developers.google.com/apps-script/guides/sheets)、
 [DocumentApp](https://developers.google.com/apps-script/reference/document)、
-[DriveApp](https://developers.google.com/apps-script/reference/drive)、
+[Drive API（高度なサービス）](https://developers.google.com/apps-script/advanced/drive)、
 [OAuth スコープ](https://developers.google.com/apps-script/concepts/scopes)。
